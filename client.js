@@ -1,7 +1,7 @@
 const logElement = document.getElementById('log');
 logElement.value = '';
 
-let address = 'localhost'
+let address = '0.0.0.0'
 let port = 8080
 let ws = new WebSocket(`ws://${address}:${port}`);
 
@@ -26,17 +26,17 @@ ws.onmessage = function(e) {
 //     }
 // }
 
-const ACT = document.getElementById('ACT');
 const PWR = document.getElementById('PWR');
+const ACT = document.getElementById('ACT');
 
-ACT.onclick = function() {
-    let message = 'ACT';
+PWR.onclick = function() {
+    let message = 'PWR';
     ws.send(message);
     log(`sent: ${message}`);
 }
 
-PWR.onclick = function() {
-    let message = 'PWR';
+ACT.onclick = function() {
+    let message = 'ACT';
     ws.send(message);
     log(`sent: ${message}`);
 }
