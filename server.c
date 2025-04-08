@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <ws.h>
 
-#define serverHost "localhost"
+#define serverHost "0.0.0.0"
 #define serverPort 8080
 
 int ACTStatus = 0;
@@ -39,27 +39,27 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
 
     char *message;
     if (strcmp(msg, "ACT") == 0) {
+        if (ACTStatus == 0) {
+            system("echo 1 >/sys/class/leds/ACT/brightness");
+            ACTStatus = 1;
+        } else {
+            system("echo 0 >/sys/class/leds/ACT/brightness");
+            ACTStatus = 0;
+        }
+
         message = "ACT processed";
         ws_sendframe(client, message, strlen(message), 1);
     } else if (strcmp(msg, "PWR") == 0) {
-        message = "PWR processed";
-        ws_sendframe(client, message, strlen(message), 1);
-    }
-}
-
-void toggleLED(char LED) {
-    if (strcmp(LED, "ACT") == 0) {
-        if (ACTStatus == 0) {
-            system("echo 1 >/sys/class/leds/ACT/brightness");
-        } else {
-            system("echo 0 >/sys/class/leds/ACT/brightness");
-        }
-    } else if (strcmp(LED, "PWR") == 0) {
         if (PWRStatus == 0) {
             system("echo 1 >/sys/class/leds/PWR/brightness");
+            PWRStatus = 1;
         } else {
             system("echo 0 >/sys/class/leds/PWR/brightness");
+            PWRStatus = 0;
         }
+
+        message = "PWR processed";
+        ws_sendframe(client, message, strlen(message), 1);
     }
 }
 
