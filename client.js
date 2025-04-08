@@ -1,27 +1,47 @@
-const messageText = document.getElementById('messageText');
-const messageButton = document.getElementById('messageButton');
-
-const log = document.getElementById('log');
-log.value = '';
+const logElement = document.getElementById('log');
+logElement.value = '';
 
 let address = 'localhost'
 let port = 8080
 let ws = new WebSocket(`ws://${address}:${port}`);
 
 ws.onopen = function() {
-    log.value += `connected to ${address}:${port}\n`;
+    log(`connected to ${address}:${port}`);
 }
 
 ws.onmessage = function(e) {
-    log.value += `received: ${e.data}\n`
+    log(`received: ${e.data}`);
 }
 
-messageButton.onclick = function() {
-    let message = messageText.value;
+// const messageText = document.getElementById('messageText');
+// const messageButton = document.getElementById('messageButton');
 
-    if (message.length > 0) {
-        ws.send(message);
-        log.value += `sent: ${message}\n`
-        message = '';
-    }
+// messageButton.onclick = function() {
+//     let message = messageText.value;
+
+//     if (message.length > 0) {
+//         ws.send(message);
+//         log.value += `sent: ${message}\n`
+//         message = '';
+//     }
+// }
+
+const ACT = document.getElementById('ACT');
+const PWR = document.getElementById('PWR');
+
+ACT.onclick = function() {
+    let message = 'ACT';
+    ws.send(message);
+    log(`sent: ${message}`);
+}
+
+PWR.onclick = function() {
+    let message = 'PWR';
+    ws.send(message);
+    log(`sent: ${message}`);
+}
+
+function log(message) {
+    logElement.value += message + '\n';
+    logElement.scrollTop = logElement.scrollHeight;
 }
