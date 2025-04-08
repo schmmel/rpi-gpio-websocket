@@ -4,6 +4,9 @@
 #include <unistd.h>
 #include <ws.h>
 
+#define serverHost "localhost"
+#define serverPort 8080
+
 // called when client connects to server
 void onopen(ws_cli_conn_t client) {
     char *address, *port;
@@ -28,16 +31,16 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
     address = ws_getaddress(client);
     port = ws_getport(client);
 
-    printf("message recieved: %s (size: %ld, type: %d), from: %s, port: %s\n", msg, size, type, address, port);
+    printf("message received: %s (size: %ld, type: %d), from: %s, port: %s\n", msg, size, type, address, port);
 
     // sends recieved message to all connected clients
-    ws_sendframe_bcast(8080, (char *)msg, size, type);
+    ws_sendframe_bcast(serverPort, (char *)msg, size, type);
 }
 
 int main(void) {
     ws_socket(&(struct ws_server){
-        .host = "0.0.0.0",
-        .port = 8080,
+        .host = serverHost,
+        .port = serverPort,
         .thread_loop = 0,
         // .timeout_ms = 1000,
         .evs.onopen = &onopen,

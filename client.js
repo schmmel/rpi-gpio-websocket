@@ -13,7 +13,7 @@ ws.onopen = function() {
 }
 
 ws.onmessage = function(e) {
-    log.value += `recieved: ${e.data}\n`
+    log.value += `received: ${e.data}\n`
 }
 
 messageButton.onclick = function() {
