@@ -3,6 +3,8 @@ import "dosato_websockets/websockets"
 make int PWRStatus = 0
 make int ACTStatus = 0
 
+// initialise leds
+// this does not work if you do not have write access to /PWR/ and /ACT/
 do system("echo none >/sys/class/leds/PWR/trigger")
 do system("echo none >/sys/class/leds/ACT/trigger")
 do system("echo 0 >/sys/class/leds/PWR/brightness")

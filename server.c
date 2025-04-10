@@ -61,6 +61,8 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
 }
 
 int main() {
+    // initialise leds
+    // this does not work if you do not have write access to /PWR/ and /ACT/
     system("echo none >/sys/class/leds/PWR/trigger");
     system("echo none >/sys/class/leds/ACT/trigger");
     system("echo 0 >/sys/class/leds/PWR/brightness");
