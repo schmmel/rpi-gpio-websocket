@@ -1,11 +1,54 @@
-import "websockets.so"
+import "dosato_websockets/websockets"
+
+make int PWRStatus = 0
+make int ACTStatus = 0
+
+do system("echo none >/sys/class/leds/PWR/trigger")
+do system("echo none >/sys/class/leds/ACT/trigger")
+do system("echo 0 >/sys/class/leds/PWR/brightness")
+do system("echo 0 >/sys/class/leds/ACT/brightness")
 
 do startServer(
-    "0.0.0.0", 8080, 36000,
+    "0.0.0.0", 8080, 1000,
     void (client, client_endpoint) => {
-        do sayln("Client connected: " + client_endpoint)
+        do sayln("connection opened, addr: " + client_endpoint)
     },
     void (client, client_endpoint) => {
-        do sayln("Client disconnected: " + client_endpoint)
+        do sayln("connection closed, addr: " + client_endpoint)
+    },
+    void (client, client_endpoint, data, data_size, data_type) => {
+        do sayln("message received: " + fromByteArray(data) + "(size: " + data_size + " type: " + data_type + ") from: " + client_endpoint)
+
+        if fromByteArray(data) == "PWR" then {
+            if PWRStatus == 0 then {
+                do system("echo 1 >/sys/class/leds/PWR/brightness")
+                set PWRStatus = 1
+            } else {
+                do system("echo 0 >/sys/class/leds/PWR/brightness")
+                set PWRStatus = 0
+            }
+            do sendMessage(client, toByteArray("PWR " + PWRStatus), data_type)
+        } else if fromByteArray(data) == "ACT" then {
+            if ACTStatus == 0 then {
+                do system("echo 1 >/sys/class/leds/ACT/brightness")
+                set ACTStatus = 1
+            } else {
+                do system("echo 0 >/sys/class/leds/ACT/brightness")
+                set ACTStatus = 0
+            }
+            do sendMessage(client, toByteArray("ACT " + PWRStatus), data_type)
+        }
     }
 )
+
+define toByteArray(string str) {
+    make arr = []
+    do push(arr, (ubyte)i) for i in str
+    return arr
+}
+
+define fromByteArray(array arr) {
+    make str = ""
+    set str += (char)i for i in arr
+    return str
+}

@@ -44,7 +44,7 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
             PWRStatus = 0;
         }
 
-        message = "PWR processed";
+        message = "PWR " + PWRStatus;
         ws_sendframe(client, message, strlen(message), 1);
     } else if (strcmp(msg, "ACT") == 0) {
         if (ACTStatus == 0) {
@@ -55,7 +55,7 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
             ACTStatus = 0;
         }
 
-        message = "ACT processed";
+        message = "ACT " + ACTStatus;
         ws_sendframe(client, message, strlen(message), 1);
     }
 }
