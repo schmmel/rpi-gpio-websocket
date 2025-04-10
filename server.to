@@ -1,0 +1,11 @@
+import "websockets.so"
+
+do startServer(
+    "0.0.0.0", 8080, 36000,
+    void (client, client_endpoint) => {
+        do sayln("Client connected: " + client_endpoint)
+    },
+    void (client, client_endpoint) => {
+        do sayln("Client disconnected: " + client_endpoint)
+    }
+)

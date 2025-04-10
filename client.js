@@ -1,7 +1,7 @@
 const logElement = document.getElementById('log');
 logElement.value = '';
 
-let address = '0.0.0.0'
+let address = '192.168.67.223'
 let port = 8080
 let ws = new WebSocket(`ws://${address}:${port}`);
 
