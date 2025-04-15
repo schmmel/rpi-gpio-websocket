@@ -38,7 +38,7 @@ do startServer(
                 do system("echo 0 >/sys/class/leds/ACT/brightness")
                 set ACTStatus = 0
             }
-            do sendMessage(client, toByteArray("ACT " + PWRStatus), data_type)
+            do sendMessage(client, toByteArray("ACT " + ACTStatus), data_type)
         }
     }
 )
