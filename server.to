@@ -19,7 +19,7 @@ do startServer(
         do sayln("connection closed, addr: " + client_endpoint)
     },
     void (client, client_endpoint, data, data_size, data_type) => {
-        do sayln("message received: " + fromByteArray(data) + "(size: " + data_size + " type: " + data_type + ") from: " + client_endpoint)
+        do sayln("message received: " + fromByteArray(data) + " (size: " + data_size + " type: " + data_type + ") from: " + client_endpoint)
 
         if fromByteArray(data) == "PWR" then {
             if PWRStatus == 0 then {
