@@ -66,12 +66,12 @@ int main() {
 
     wiringPiSetupGpio();
 
-    pinMode(539, INPUT);
+    pinMode(5, OUTPUT);
 
-    pullUpDnControl(539, PUD_UP);
+    digitalWrite(5, HIGH);
 
-    int value = digitalRead(539);
-    printf("%d", value);
+    int value = digitalRead(5);
+    printf("%d\n", value);
 
     ws_socket(&(struct ws_server){
         .host = "0.0.0.0",
