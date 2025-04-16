@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
 #include <ws.h>
+#include <wiringPi.h>
 
 int PWRStatus = 0;
 int ACTStatus = 0;
@@ -61,12 +63,15 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
 }
 
 int main() {
-    // initialise leds
-    // this does not work if you do not have write access to /PWR/ and /ACT/
-    system("echo none >/sys/class/leds/PWR/trigger");
-    system("echo none >/sys/class/leds/ACT/trigger");
-    system("echo 0 >/sys/class/leds/PWR/brightness");
-    system("echo 0 >/sys/class/leds/ACT/brightness");
+
+    wiringPiSetupGpio();
+
+    pinMode(539, INPUT);
+
+    pullUpDnControl(539, PUD_UP);
+
+    int value = digitalRead(539);
+    printf("%d", value);
 
     ws_socket(&(struct ws_server){
         .host = "0.0.0.0",
