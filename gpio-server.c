@@ -36,16 +36,17 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
     char *message;
     if (strcmp(msg, "GPIO5") == 0) {
         int value = digitalRead(5);
+        int status;
 
-        if (value == 0) {
+        if (value == LOW) {
             digitalWrite(5, HIGH);
-            value = 1;
-        } else {
+            status = 1;
+        } else if (value == HIGH) {
             digitalWrite(5, LOW);
-            value = 0;
+            status = 0;
         }
 
-        snprintf(message, 8, "%s %d", msg, value);
+        snprintf(message, 8, "GPIO5 %d", status);
         ws_sendframe(client, message, strlen(message), 1);
     }
 }

@@ -29,6 +29,8 @@ ws.onmessage = function(e) {
 const PWR = document.getElementById('PWR');
 const ACT = document.getElementById('ACT');
 
+const GPIO5 = document.getElementById('GPIO5');
+
 PWR.onclick = function() {
     let message = 'PWR';
     ws.send(message);
@@ -37,6 +39,12 @@ PWR.onclick = function() {
 
 ACT.onclick = function() {
     let message = 'ACT';
+    ws.send(message);
+    log(`sent: ${message}`);
+}
+
+GPIO5.onclick = function() {
+    let message = 'GPIO5';
     ws.send(message);
     log(`sent: ${message}`);
 }
