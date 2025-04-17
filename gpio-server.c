@@ -7,9 +7,6 @@
 #include <ws.h>
 #include <wiringPi.h>
 
-int PWRStatus = 0;
-int ACTStatus = 0;
-
 // called when client connects to server
 void onopen(ws_cli_conn_t client) {
     char *address, *port;
@@ -37,27 +34,18 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
     printf("message received: %s (size: %ld, type: %d), from: %s, port: %s\n", msg, size, type, address, port);
 
     char *message;
-    if (strcmp(msg, "PWR") == 0) {
-        if (PWRStatus == 0) {
-            system("echo 1 >/sys/class/leds/PWR/brightness");
-            PWRStatus = 1;
+    if (strcmp(msg, "GPIO5") == 0) {
+        int value = digitalRead(5);
+
+        if (value == 0) {
+            digitalWrite(5, HIGH);
+            value = 1;
         } else {
-            system("echo 0 >/sys/class/leds/PWR/brightness");
-            PWRStatus = 0;
+            digitalWrite(5, LOW);
+            value = 0;
         }
 
-        snprintf(message, 6, "PWR %d", PWRStatus);
-        ws_sendframe(client, message, strlen(message), 1);
-    } else if (strcmp(msg, "ACT") == 0) {
-        if (ACTStatus == 0) {
-            system("echo 1 >/sys/class/leds/ACT/brightness");
-            ACTStatus = 1;
-        } else {
-            system("echo 0 >/sys/class/leds/ACT/brightness");
-            ACTStatus = 0;
-        }
-
-        snprintf(message, 6, "ACT %d", ACTStatus);
+        snprintf(message, 8, "%s %d", msg, value);
         ws_sendframe(client, message, strlen(message), 1);
     }
 }
@@ -65,13 +53,8 @@ void onmessage(ws_cli_conn_t client, const unsigned char *msg, uint64_t size, in
 int main() {
 
     wiringPiSetupGpio();
-
     pinMode(5, OUTPUT);
-
-    digitalWrite(5, HIGH);
-
-    int value = digitalRead(5);
-    printf("%d\n", value);
+    digitalWrite(5, LOW);
 
     ws_socket(&(struct ws_server){
         .host = "0.0.0.0",
